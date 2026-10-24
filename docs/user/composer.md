@@ -152,19 +152,31 @@ Stashes containing uploaded files must be restored in their original environment
 Those files are retained for 24 hours. After an upload expires, restore the prompt
 and use **Attach again** or remove the missing file before sending.
 
-## Voice input on iPhone
+## Voice input on mobile
 
-On supported iPhones with iOS 26 or later, use the composer's microphone to record,
-then confirm to transcribe. Text is inserted where your selection was when
+Use the composer's microphone to record, then confirm to transcribe. Text is inserted where your selection was when
 recording started, ready for you to review and edit before sending.
 
-The first use may download Apple's speech model and needs a network connection.
-Later transcription works offline for that language. Recordings can be up to five
-minutes long. Canceling, leaving the screen, or an audio interruption discards the
-recording and preserves your existing draft. While recording, the screen stays
+In **Settings → Voice input**, choose **Whisper** for on-device transcription on iOS
+or Android, including Russian. Download a multilingual Base model (148 MB) or Small
+model (488 MB), then select a language or use automatic detection. The language is
+independent of your phone's interface language. Small uses more memory and is slower.
+You can delete either model by selecting it and choosing **Delete selected model**.
+Downloads need an internet connection; transcription works offline once downloaded.
+Whisper requires an app build with Whisper support; an update to JavaScript alone
+cannot add it to an older native app.
+
+Apple remains the default on supported iPhones with iOS 26 or later. It uses the
+device language; the first use may download Apple's speech model. Later
+transcription works offline for that language.
+
+Recordings can be up to five minutes long. Canceling or an audio interruption discards
+the recording and preserves your existing draft. You can navigate within the app
+and finish dictation from the floating control; moving the app to the background
+stops an active recording. While recording, the screen stays
 awake; it can sleep normally once recording stops.
 
-Voice input records from the first connected microphone in **Settings → Microphone**.
+On iPhone, voice input records from the first connected microphone in **Settings → Microphone**.
 The list mixes kinds (built-in, other wired, other Bluetooth, CarPlay) with wired and
 Bluetooth devices you have dictated with, listed by name. Drag to rank them together:
 for example, put **Other Bluetooth** above your AirPods so a new headset is preferred

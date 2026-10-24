@@ -435,6 +435,7 @@ const config: ExpoConfig = {
           // the widget never renders and it stays on "Loading widget". WorkManager
           // 2.10 ships this rule itself; drop it once the resolved version gets there.
           extraProguardRules: [
+            "-keep class com.rnwhisper.** { *; }",
             "-dontwarn kotlin.MustUseReturnValues",
             "-keep class * extends androidx.work.InputMerger { <init>(); }",
           ].join("\n"),

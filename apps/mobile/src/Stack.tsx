@@ -115,6 +115,7 @@ import { ScheduledTaskEditorProvider } from "./features/settings/scheduled-task-
 import { SettingsKeyboardRouteScreen } from "./features/settings/SettingsKeyboardRouteScreen";
 import { SettingsLegalRouteScreen } from "./features/settings/SettingsLegalRouteScreen";
 import { SettingsMicrophoneRouteScreen } from "./features/settings/SettingsMicrophoneRouteScreen";
+import { SettingsVoiceInputRouteScreen } from "./features/settings/SettingsVoiceInputRouteScreen";
 import {
   SettingsOpenSourceLicenseRouteScreen,
   SettingsOpenSourceLicensesRouteScreen,
@@ -335,6 +336,11 @@ const SettingsContentStack = createV5SheetStackNavigator({
       options: {
         title: "Microphone",
       },
+    }),
+    SettingsVoiceInput: createNativeStackScreen({
+      screen: SettingsVoiceInputRouteScreen,
+      linking: "voice-input",
+      options: { title: "Voice input" },
     }),
     SettingsFollowUp: createNativeStackScreen({
       screen: SettingsFollowUpRouteScreen,

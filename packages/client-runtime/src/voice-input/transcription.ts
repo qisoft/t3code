@@ -17,6 +17,7 @@ export type VoiceTranscriptionErrorCode =
   | "unavailable"
   | "unsupported-locale"
   | "preparation-failed"
+  | "model-missing"
   | "transcription-failed"
   | "cancelled";
 

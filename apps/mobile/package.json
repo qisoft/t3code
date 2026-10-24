@@ -78,6 +78,7 @@
     "@t3tools/provider-pi": "workspace:*",
     "@t3tools/shared": "workspace:*",
     "@tabler/icons-react-native": "^3.44.0",
+    "buffer": "6.0.3",
     "clsx": "^2.1.1",
     "diff": "8.0.3",
     "effect": "catalog:",
@@ -136,7 +137,8 @@
     "shiki": "4.2.0",
     "tailwind-merge": "^3.5.0",
     "unified": "catalog:",
-    "uniwind": "1.12.1"
+    "uniwind": "1.12.1",
+    "whisper.rn": "0.7.4"
   },
   "devDependencies": {
     "@effect/vitest": "catalog:",

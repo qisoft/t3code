@@ -93,6 +93,30 @@
       ]
     },
     {
+      "bundles": ["android", "ios", "mobile"],
+      "license": "MIT",
+      "name": "whisper.cpp and ggml",
+      "sourceUrl": "https://github.com/ggml-org/whisper.cpp",
+      "generatedNotices": [
+        {
+          "licenseId": "MIT",
+          "copyrights": ["Copyright (c) 2023-2026 The ggml authors"]
+        }
+      ]
+    },
+    {
+      "bundles": ["android", "ios", "mobile"],
+      "license": "MIT",
+      "name": "Whisper models",
+      "sourceUrl": "https://github.com/openai/whisper",
+      "generatedNotices": [
+        {
+          "licenseId": "MIT",
+          "copyrights": ["Copyright (c) 2022 OpenAI"]
+        }
+      ]
+    },
+    {
       "bundles": ["android", "assets", "mobile", "web"],
       "license": "MIT",
       "name": "libghostty-vt",

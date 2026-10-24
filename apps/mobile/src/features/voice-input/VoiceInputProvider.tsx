@@ -1,4 +1,4 @@
-import { RegistryContext, useAtomMount } from "@effect/atom-react";
+import { RegistryContext, useAtomMount, useAtomValue } from "@effect/atom-react";
 import {
   AudioModule,
   RecordingPresets,
@@ -29,7 +29,8 @@ import {
   preferredMicrophoneInput,
   rememberMicrophones,
 } from "../../lib/microphonePriority";
-import { getLocalVoiceTranscriber } from "../../native/voiceTranscription";
+import { defaultVoiceTranscriptionSettings } from "../../lib/voiceTranscriptionSettings";
+import { getSelectedVoiceTranscriber } from "../../native/selectedVoiceTranscription";
 import { mobilePreferencesAtom, updateMobilePreferencesAtom } from "../../state/preferences";
 import { getNativeShowcaseScene } from "../showcase/nativeShowcaseScene";
 import {
@@ -100,8 +101,7 @@ export function useGlobalVoiceInput() {
 
 function useVoiceInputRuntime() {
   const registry = use(RegistryContext);
-  // Dictation reads and records microphones without subscribing the provider to preferences.
-  useAtomMount(mobilePreferencesAtom);
+  const preferencesResult = useAtomValue(mobilePreferencesAtom);
   useAtomMount(updateMobilePreferencesAtom);
   const [{ state, ownerKey, label }, setState] = useState({
     state: INITIAL_STATE,
@@ -157,7 +157,13 @@ function useVoiceInputRuntime() {
     recorderRef.current = recorder;
     sessionRef.current = new VoiceInputSession({
       recorder,
-      getTranscriber: getLocalVoiceTranscriber,
+      getTranscriber: () => {
+        const preferences = registry.get(mobilePreferencesAtom);
+        if (!AsyncResult.isSuccess(preferences)) return null;
+        return getSelectedVoiceTranscriber(
+          preferences.value.voiceTranscription ?? defaultVoiceTranscriptionSettings(Platform.OS),
+        );
+      },
       requestPermission: async () => {
         const permission = await requestRecordingPermissionsAsync();
         return { granted: permission.granted, canAskAgain: permission.canAskAgain };
@@ -256,7 +262,13 @@ function useVoiceInputRuntime() {
   return {
     // Store screenshots show the dictation button even on simulators, whose
     // on-device transcription is unavailable.
-    isAvailable: getLocalVoiceTranscriber() !== null || getNativeShowcaseScene() !== null,
+    isAvailable:
+      (AsyncResult.isSuccess(preferencesResult) &&
+        getSelectedVoiceTranscriber(
+          preferencesResult.value.voiceTranscription ??
+            defaultVoiceTranscriptionSettings(Platform.OS),
+        ) !== null) ||
+      getNativeShowcaseScene() !== null,
     state,
     audioLevels,
     elapsedSeconds,

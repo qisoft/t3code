@@ -147,6 +147,19 @@ describe("resolveTranscriptCommit", () => {
       text: "one new two",
     });
   });
+
+  it("separates dictated Cyrillic words from an existing draft", () => {
+    const atEnd = draft({ text: "Привет", selection: { start: 6, end: 6 } });
+    expect(resolveTranscriptCommit(atEnd, atEnd, "мир", "ru-RU")).toMatchObject({
+      kind: "commit",
+      text: "Привет мир",
+    });
+    const atStart = draft({ text: "мир", selection: { start: 0, end: 0 } });
+    expect(resolveTranscriptCommit(atStart, atStart, "Привет", "ru")).toMatchObject({
+      kind: "commit",
+      text: "Привет мир",
+    });
+  });
 });
 
 describe("VoiceInputController", () => {

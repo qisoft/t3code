@@ -18,6 +18,10 @@ import type { ComposerEnterBehavior } from "../lib/composerEnterBehavior";
 import type { FollowUpBehavior } from "../lib/followUpBehavior";
 import { isMicrophoneKind, type MicrophoneEntry } from "../lib/microphonePriority";
 import { MOBILE_THEME_IDS, type MobileThemeId, type MobileThemeMode } from "../lib/mobileTheme";
+import {
+  parseVoiceTranscriptionSettings,
+  type VoiceTranscriptionSettings,
+} from "../lib/voiceTranscriptionSettings";
 import * as MobileDatabase from "./mobile-database";
 import * as MobileSecureStorage from "./mobile-secure-storage";
 import { MobileStorageDecodeError, MobileStorageEncodeError } from "./mobile-storage";
@@ -76,6 +80,7 @@ export interface Preferences {
   readonly followUpBehavior?: FollowUpBehavior;
   /** Microphone kinds and remembered devices, most preferred first. iOS only. */
   readonly microphones?: ReadonlyArray<MicrophoneEntry>;
+  readonly voiceTranscription?: VoiceTranscriptionSettings;
   /** @deprecated Kept temporarily so older OTA bundles retain the selected mode. */
   readonly projectGroupingEnabled?: boolean;
   readonly projectGroupingMode?: SidebarProjectGroupingMode;
@@ -153,6 +158,7 @@ function sanitizePreferences(parsed: Preferences): Preferences {
     composerEnterBehavior?: ComposerEnterBehavior;
     followUpBehavior?: FollowUpBehavior;
     microphones?: ReadonlyArray<MicrophoneEntry>;
+    voiceTranscription?: VoiceTranscriptionSettings;
     projectGroupingEnabled?: boolean;
     projectGroupingMode?: SidebarProjectGroupingMode;
     planModeEnabled?: boolean;
@@ -241,6 +247,8 @@ function sanitizePreferences(parsed: Preferences): Preferences {
         : [];
     });
   }
+  const voiceTranscription = parseVoiceTranscriptionSettings(parsed.voiceTranscription);
+  if (voiceTranscription) preferences.voiceTranscription = voiceTranscription;
   if (typeof parsed.projectGroupingEnabled === "boolean") {
     preferences.projectGroupingEnabled = parsed.projectGroupingEnabled;
   }
