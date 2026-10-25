@@ -82,6 +82,16 @@ Build and install a self-contained Release app that does not need Metro:
 vp run ios:release
 ```
 
+For a fork distributed through your own paid Apple Developer account, set
+`T3CODE_IOS_BUNDLE_ID` and `T3CODE_IOS_TEAM_ID` before prebuilding. Optional
+`T3CODE_MOBILE_APP_NAME`, `T3CODE_MOBILE_SCHEME`, `T3CODE_MOBILE_VERSION`, and
+`T3CODE_MOBILE_BUILD_NUMBER` select its display name, URL scheme, version, and build number.
+The widget and share extension identifiers follow the custom bundle ID. Custom-identifier
+builds omit the original Expo project, OTA updates, associated domains, and native Apple sign-in.
+Create a matching app record in your App Store Connect account, then archive and export the
+generated Xcode workspace for TestFlight using your own signing credentials. The checked-in
+EAS submission profile belongs to the upstream app.
+
 The Personal Team equivalent also needs a unique bundle identifier:
 
 ```bash

@@ -110,7 +110,16 @@ function resolveAppVariant(value: string | undefined): AppVariant {
 const variant = VARIANT_CONFIG[APP_VARIANT];
 const iosBundleIdentifier = isIosPersonalTeamBuild
   ? personalTeamBundleIdentifier!
-  : variant.iosBundleIdentifier;
+  : repoEnv.T3CODE_IOS_BUNDLE_ID?.trim() || variant.iosBundleIdentifier;
+const isForkBuild = iosBundleIdentifier !== variant.iosBundleIdentifier;
+const appleTeamId = repoEnv.T3CODE_IOS_TEAM_ID?.trim() || (isForkBuild ? undefined : "ARK85ZXQ4Z");
+
+if (!IOS_BUNDLE_IDENTIFIER_PATTERN.test(iosBundleIdentifier)) {
+  throw new Error("T3CODE_IOS_BUNDLE_ID must be a reverse-DNS identifier.");
+}
+if (isForkBuild && !appleTeamId && !isIosPersonalTeamBuild) {
+  throw new Error("Set T3CODE_IOS_TEAM_ID when building with a custom T3CODE_IOS_BUNDLE_ID.");
+}
 
 const dmSansFonts = {
   regular: "@expo-google-fonts/dm-sans/400Regular/DMSans_400Regular.ttf",
@@ -216,10 +225,10 @@ const sharingPlugin: NonNullable<ExpoConfig["plugins"]>[number] = [
 // Match iOS PostScript names on Android so RN and the native composer share fonts before runtime loading.
 
 const config: ExpoConfig = {
-  name: variant.appName,
+  name: repoEnv.T3CODE_MOBILE_APP_NAME?.trim() || variant.appName,
   slug: "t3-code",
   platforms: ["ios", "android"],
-  scheme: variant.scheme,
+  scheme: repoEnv.T3CODE_MOBILE_SCHEME?.trim() || variant.scheme,
   version: repoEnv.T3CODE_MOBILE_VERSION ?? "2.1.0",
   runtimeVersion: {
     // Skip costly fingerprinting on dev launches; preview and production OTAs require matching native projects.
@@ -229,8 +238,8 @@ const config: ExpoConfig = {
   icon: variant.assets.appIcon,
   userInterfaceStyle: "automatic",
   updates: {
-    enabled: repoEnv.T3CODE_MOBILE_UPDATES_ENABLED !== "0",
-    url: "https://u.expo.dev/d763fcb8-d37c-41ea-a773-b54a0ab4a454",
+    enabled: !isForkBuild && repoEnv.T3CODE_MOBILE_UPDATES_ENABLED !== "0",
+    ...(!isForkBuild ? { url: "https://u.expo.dev/d763fcb8-d37c-41ea-a773-b54a0ab4a454" } : {}),
     checkAutomatically: "ON_LOAD",
     fallbackToCacheTimeout: 0,
   },
@@ -240,13 +249,20 @@ const config: ExpoConfig = {
     requireFullScreen: process.env.T3_SHOWCASE_CAPTURE_BUILD === "1",
     bundleIdentifier: iosBundleIdentifier,
     // Avoid Personal Team fallback: it cannot sign App Groups, Apple sign-in or push entitlements.
-    appleTeamId: "ARK85ZXQ4Z",
-    associatedDomains: [
-      `applinks:${variant.relyingParty}`,
-      `webcredentials:${variant.relyingParty}`,
-    ],
+    appleTeamId,
+    ...(repoEnv.T3CODE_MOBILE_BUILD_NUMBER
+      ? { buildNumber: repoEnv.T3CODE_MOBILE_BUILD_NUMBER }
+      : {}),
+    ...(!isForkBuild
+      ? {
+          associatedDomains: [
+            `applinks:${variant.relyingParty}`,
+            `webcredentials:${variant.relyingParty}`,
+          ],
+        }
+      : {}),
     entitlements: {
-      "keychain-access-groups": [`$(AppIdentifierPrefix)${variant.iosBundleIdentifier}`],
+      "keychain-access-groups": [`$(AppIdentifierPrefix)${iosBundleIdentifier}`],
     },
     infoPlist: {
       UISupportedInterfaceOrientations: [
@@ -339,7 +355,10 @@ const config: ExpoConfig = {
       },
     ],
     // Gate Clerk here: withoutIosPersonalTeamCapabilities runs too early to strip its entitlement.
-    ["@clerk/expo", { theme: "./clerk-theme.json", appleSignIn: !isIosPersonalTeamBuild }],
+    [
+      "@clerk/expo",
+      { theme: "./clerk-theme.json", appleSignIn: !isIosPersonalTeamBuild && !isForkBuild },
+    ],
     "expo-web-browser",
     [
       "expo-quick-actions",
@@ -449,11 +468,9 @@ const config: ExpoConfig = {
       tracesDataset: repoEnv.EXPO_PUBLIC_OTLP_TRACES_DATASET ?? null,
       tracesToken: repoEnv.EXPO_PUBLIC_OTLP_TRACES_TOKEN ?? null,
     },
-    eas: {
-      projectId: "d763fcb8-d37c-41ea-a773-b54a0ab4a454",
-    },
+    ...(!isForkBuild ? { eas: { projectId: "d763fcb8-d37c-41ea-a773-b54a0ab4a454" } } : {}),
   },
-  owner: "pingdotgg",
+  ...(!isForkBuild ? { owner: "pingdotgg" } : {}),
   experiments: {
     // Metro only runs babel-plugin-react-compiler when this is set; see src/reactCompilerCoverage.test.ts.
     reactCompiler: true,
