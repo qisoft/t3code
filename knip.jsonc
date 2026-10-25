@@ -109,6 +109,7 @@
         "@t3tools/mobile-highlights-native",
         "@t3tools/mobile-review-diff-native",
         "@t3tools/mobile-terminal-native",
+        "buffer", // Runtime polyfill for whisper.rn's safe-buffer import.
       ],
     },
     "apps/mobile/modules/t3-source-text": {
