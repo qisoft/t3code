@@ -19,6 +19,13 @@ export const WHISPER_MODELS = [
     sha256: "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
     description: "488 MB · More accurate, slower",
   },
+  {
+    id: "large-v3-turbo-q5_0",
+    label: "Large v3 Turbo (Q5)",
+    bytes: 574_041_195,
+    sha256: "394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2",
+    description: "574 MB · Quantized Large v3 Turbo, highest memory use",
+  },
 ] as const;
 
 function modelFile(id: WhisperModelId) {

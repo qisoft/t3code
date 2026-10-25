@@ -59,6 +59,26 @@ beforeEach(() => {
 });
 
 describe("Whisper model storage", () => {
+  it("downloads and validates the quantized Large v3 Turbo model at its pinned source", async () => {
+    const id = "large-v3-turbo-q5_0";
+    const turboBytes = 574_041_195;
+    const sha256 = "394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2";
+    mocks.digest.mockResolvedValue(sha256);
+    mocks.download.mockImplementationOnce(async (_url, file) => {
+      mocks.files.set(file.uri, turboBytes);
+      return file;
+    });
+    await downloadWhisperModel(id, new AbortController().signal, vi.fn());
+    expect(mocks.download.mock.calls[0]?.[0]).toBe(
+      "https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-large-v3-turbo-q5_0.bin",
+    );
+    expect(getWhisperModelUri(id)).toBe(
+      "file:///documents/whisper-models/ggml-large-v3-turbo-q5_0.bin",
+    );
+    deleteWhisperModel(id);
+    expect(getWhisperModelUri(id)).toBeNull();
+  });
+
   it("exposes the model only after the completed file has moved into place", async () => {
     const moving = Promise.withResolvers<void>();
     const finishMove = Promise.withResolvers<void>();

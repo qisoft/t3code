@@ -16,6 +16,11 @@ describe("voice transcription preferences", () => {
     expect(parseVoiceTranscriptionSettings(value)).toEqual(value);
   });
 
+  it("restores Large v3 Turbo Q5 as the selected model", () => {
+    const value = { engine: "whisper", model: "large-v3-turbo-q5_0", language: "ru" };
+    expect(parseVoiceTranscriptionSettings(value)).toEqual(value);
+  });
+
   it("ignores invalid persisted settings", () => {
     expect(parseVoiceTranscriptionSettings(null)).toBeUndefined();
     expect(

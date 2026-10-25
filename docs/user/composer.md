@@ -179,10 +179,11 @@ Use the composer's microphone to record, then confirm to transcribe. Text is ins
 recording started, ready for you to review and edit before sending.
 
 In **Settings → Voice input**, choose **Whisper** for on-device transcription on iOS
-or Android, including Russian. Download a multilingual Base model (148 MB) or Small
-model (488 MB), then select a language or use automatic detection. The language is
-independent of your phone's interface language. Small uses more memory and is slower.
-You can delete either model by selecting it and choosing **Delete selected model**.
+or Android, including Russian. Download a multilingual Base model (148 MB), Small
+model (488 MB), or Large v3 Turbo (Q5, 574 MB), then select a language or use automatic
+detection. The language is independent of your phone's interface language. Base uses
+the least memory; Large v3 Turbo uses the most. Speed depends on your phone.
+You can delete a model by selecting it and choosing **Delete selected model**.
 Downloads need an internet connection; transcription works offline once downloaded.
 Whisper requires an app build with Whisper support; an update to JavaScript alone
 cannot add it to an older native app.

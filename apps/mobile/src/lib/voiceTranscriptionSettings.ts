@@ -9,7 +9,7 @@ export const WHISPER_LANGUAGES = [
 ] as const;
 
 export type WhisperLanguage = (typeof WHISPER_LANGUAGES)[number]["id"];
-export type WhisperModelId = "base" | "small";
+export type WhisperModelId = "base" | "small" | "large-v3-turbo-q5_0";
 export type VoiceTranscriptionSettings = {
   readonly engine: "apple" | "whisper";
   readonly model: WhisperModelId;
@@ -27,7 +27,11 @@ export function parseVoiceTranscriptionSettings(
   if (!("engine" in value) || (value.engine !== "apple" && value.engine !== "whisper")) {
     return undefined;
   }
-  if (!("model" in value) || (value.model !== "base" && value.model !== "small")) return undefined;
+  if (
+    !("model" in value) ||
+    (value.model !== "base" && value.model !== "small" && value.model !== "large-v3-turbo-q5_0")
+  )
+    return undefined;
   if (!("language" in value)) return undefined;
   const language = WHISPER_LANGUAGES.find((entry) => entry.id === value.language)?.id;
   return language ? { engine: value.engine, model: value.model, language } : undefined;

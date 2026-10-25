@@ -155,9 +155,9 @@ export function SettingsVoiceInputRouteScreen() {
         </SettingsSection>
         {error ? <Text className="px-2 text-sm text-danger-foreground">{error}</Text> : null}
         <Text className="px-2 text-sm text-foreground-muted">
-          Both models support multiple languages. Download once using an internet connection;
-          transcription then works offline. Small needs more memory and takes longer on older
-          phones. Leaving this screen cancels an unfinished download.
+          All models support multiple languages. Download once using an internet connection;
+          transcription then works offline. Small and Large v3 Turbo need more memory than Base;
+          speed depends on your phone. Leaving this screen cancels an unfinished download.
         </Text>
         <SettingsSection title="Whisper language">
           {WHISPER_LANGUAGES.map((language, index) => (
