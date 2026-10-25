@@ -5,8 +5,8 @@ import { useCallback, useRef, useState } from "react";
 import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { AppText as Text } from "../../components/AppText";
-import { ScreenScrollView as ScrollView } from "../../components/ScreenScrollView";
+import { AppText as Text } from "../../components/ui/AppText";
+import { ScreenScrollView as ScrollView } from "../../components/ui/ScreenScrollView";
 import {
   defaultVoiceTranscriptionSettings,
   WHISPER_LANGUAGES,
